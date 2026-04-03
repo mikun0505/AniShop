@@ -1,0 +1,55 @@
+package com.example.java.anishop.repository.entity;
+
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+@Entity
+@Table(name="shops")
+public class Shops {
+    
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Long ShopId;
+
+    // @Column(name="user_id", insertable=false, updatable=false)
+    // private Long userId;
+
+
+    @Column(name="name_shop")
+    private String nameShop;
+
+    @Column(name="description")
+    private String description;
+
+    @Column(name="logo")
+    private String logo;
+
+    @Column(name="is_active")
+    private Boolean isActive;
+
+    @ManyToOne
+    @JoinColumn(name="user_id",insertable=false,updatable=false)
+    private Users userShop;
+
+
+    @OneToMany(mappedBy="shopProduct",fetch=FetchType.LAZY)
+    private Set<Products> ProductShop=new HashSet<>();
+}
