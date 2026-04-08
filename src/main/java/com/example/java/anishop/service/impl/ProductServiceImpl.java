@@ -14,7 +14,6 @@ import com.example.java.anishop.converter.builderConveter.ProductSearchBuilderCo
 import com.example.java.anishop.model.OrderDetailDTO;
 import com.example.java.anishop.model.ProductDTO;
 import com.example.java.anishop.repository.ProductRepository;
-import com.example.java.anishop.repository.custom.ProductCustomRepository;
 import com.example.java.anishop.repository.entity.ProductImages;
 import com.example.java.anishop.repository.entity.Products;
 import com.example.java.anishop.service.ProductService;
@@ -23,8 +22,7 @@ import com.example.java.anishop.service.ProductService;
 @Service
 public class ProductServiceImpl implements ProductService{
 
-    @Autowired
-    private ProductCustomRepository productCustomRepository;
+    
     @Autowired
     private ProductSearchBuilderConveter productSearchBuilderConveter;
     // @Autowired

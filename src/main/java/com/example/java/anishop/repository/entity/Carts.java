@@ -11,8 +11,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,8 +33,8 @@ public class Carts {  // Giỏ hàng
     @Column(name="created_at")
     private LocalDateTime createdAt;
 
-    @ManyToOne
-    @JoinColumn(name="user_id",insertable=false,updatable=false)
+    @OneToOne
+    @JoinColumn(name="user_id")
     private Users userCarts;
 
     @OneToMany(mappedBy="cart",fetch=FetchType.LAZY)

@@ -2,6 +2,7 @@ package com.example.java.anishop.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,11 +12,8 @@ import com.example.java.anishop.repository.entity.Shops;
 
 @Repository
 public interface ShopRepository extends JpaRepository<Shops, Long>{
-    @Query(value="""
-            SELECT s.shop_id,s.name_shop,s.logo
-            ,s.description,s.is_active,s.user_id FROM shops s WHERE LOWER(s.name_shop) LIKE LOWER(CONCAT('%', :nameShop , '%' ))
-
-            """, nativeQuery=true)
+    @Query("SELECT s FROM Shops s WHERE LOWER(s.nameShop) LIKE LOWER(CONCAT('%', :nameShop, '%'))")  // JPQL query bằng tên field Java thay vì tên cột SQL
+    @EntityGraph(attributePaths={"userShop"})       // tạo EAGER cần thiết để lấy thẳng fiels trong userShop fetch luôn relation trong cùng 1 query
+                                                    // tránh Lazy Loading bị null
     List<Shops> findByNameShop(@Param("nameShop") String nameShop);
-
 }

@@ -11,7 +11,7 @@ public class UserDTO {
 
     private Long userId;
     private String fullName;
-    private String avarta;
-    private Boolean Isactive;
+    private String avatar;
+    private Boolean isActive;
     private LocalDateTime createdAt;
 }

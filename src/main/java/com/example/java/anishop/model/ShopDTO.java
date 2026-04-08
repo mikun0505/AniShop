@@ -8,9 +8,9 @@ import lombok.Setter;
 public class ShopDTO {
 
     private Long shopId;
-    private String shopName;
+    private String nameShop;
     private String description;
     private String logo;
-    private Boolean IsActive;
+    private Boolean isActive;
     private UserDTO userDTO;
 }

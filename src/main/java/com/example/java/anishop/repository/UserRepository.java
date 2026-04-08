@@ -18,4 +18,10 @@ public interface UserRepository extends JpaRepository<Users, Long> {
              """, nativeQuery=true
     )
     List<Users> searchUser(@Param("keyword") String keyword);
+
+    boolean existsByEmail(String email);
+
+    Users findByEmail(String email);
+
+    void deleteById(Long id);
 }
