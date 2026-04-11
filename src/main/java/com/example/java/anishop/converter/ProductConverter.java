@@ -4,9 +4,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.example.java.anishop.model.ProductDTO;
-import com.example.java.anishop.model.ShopDTO;
-import com.example.java.anishop.model.UserDTO;
+import com.example.java.anishop.model.reponse.CaregoryDTO;
+import com.example.java.anishop.model.reponse.ProductDTO;
+import com.example.java.anishop.model.reponse.ShopDTO;
+import com.example.java.anishop.model.reponse.UserDTO;
+import com.example.java.anishop.repository.entity.Caregories;
 import com.example.java.anishop.repository.entity.Products;
 import com.example.java.anishop.repository.entity.Shops;
 import com.example.java.anishop.repository.entity.Users;
@@ -22,7 +24,7 @@ public class ProductConverter {
 
         return productDTO;
     }
-    public ShopDTO setShopSTO(Shops shop){
+    public ShopDTO setShopDTO(Shops shop){
         ShopDTO shops=model.map(shop, ShopDTO.class);
         Users user=shop.getUserShop();
         if(user!=null){
@@ -37,4 +39,9 @@ public class ProductConverter {
         return shops;
     }
 
+    public CaregoryDTO setCaregoryDTO(Caregories caregories){
+        CaregoryDTO dto=model.map(caregories, CaregoryDTO.class);
+        
+        return dto;
+    }
 }

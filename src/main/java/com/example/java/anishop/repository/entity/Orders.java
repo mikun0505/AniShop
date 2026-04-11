@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -31,7 +34,7 @@ public class Orders {  //Đơn hàng
     // private Long userId;
 
     @Column(name="total_price")
-    private Long totalPrice;
+    private Double totalPrice;
 
     @Column(name="address")
     private String address;
@@ -39,11 +42,18 @@ public class Orders {  //Đơn hàng
     @Column(name="status")
     private Boolean status;
 
+    @CreatedDate
     @Column(name="created_at")
     private LocalDateTime createdAt;
-
+    
+    @LastModifiedDate
+    @Column(name="update_at")
+    private LocalDateTime updateAt;
+    @Column(name="deleted")
+    private Boolean deleted=false;
+    
     @ManyToOne
-    @JoinColumn(name="user_id",insertable=false,updatable=false)
+    @JoinColumn(name="user_id")
     private Users userOrder;
 
     @OneToMany(mappedBy="order",fetch=FetchType.LAZY)

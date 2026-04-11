@@ -1,5 +1,6 @@
 package com.example.java.anishop.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -11,18 +12,32 @@ import org.springframework.stereotype.Service;
 import com.example.java.anishop.builder.ProductSearchBuilder;
 import com.example.java.anishop.converter.ProductConverter;
 import com.example.java.anishop.converter.builderConveter.ProductSearchBuilderConveter;
-import com.example.java.anishop.model.OrderDetailDTO;
-import com.example.java.anishop.model.ProductDTO;
+import com.example.java.anishop.exception.AppException;
+import com.example.java.anishop.model.reponse.ApiResponse;
+import com.example.java.anishop.model.reponse.OrderDetailDTO;
+import com.example.java.anishop.model.reponse.ProductDTO;
+import com.example.java.anishop.model.request.ProductRequest;
+import com.example.java.anishop.repository.CaregoriRepository;
 import com.example.java.anishop.repository.ProductRepository;
+import com.example.java.anishop.repository.ShopRepository;
+import com.example.java.anishop.repository.entity.Caregories;
 import com.example.java.anishop.repository.entity.ProductImages;
 import com.example.java.anishop.repository.entity.Products;
+import com.example.java.anishop.repository.entity.Shops;
 import com.example.java.anishop.service.ProductService;
+import com.example.java.anishop.service.ShopService;
+import com.example.java.anishop.util.SecurityUtils;
 
 
 @Service
 public class ProductServiceImpl implements ProductService{
 
-    
+    @Autowired
+    private CaregoriRepository caregoriRepository;
+    @Autowired
+    private ShopService shopService;
+    @Autowired
+    private ShopRepository shopRepository;
     @Autowired
     private ProductSearchBuilderConveter productSearchBuilderConveter;
     // @Autowired
@@ -73,6 +88,40 @@ public class ProductServiceImpl implements ProductService{
             }
         }
         return productDTOs;
+    }
+
+    @Override
+    public ApiResponse<?> createdProduct(ProductRequest request) {
+        String email=SecurityUtils.getCurrentUserEmail();
+        Shops shop=shopRepository.findById(request.getShopId())
+                    .orElseThrow(()-> new AppException("Shop not found",404));
+
+        Caregories caregories=caregoriRepository.findById(request.getCarigoruId())
+                .orElseThrow(()-> new AppException("Caregories not found",404));
+
+        shopService.validateShopOwner(shop, email);
+
+        Products product=productRepository.findById(request.getProductId())
+                    .orElseThrow(()-> new AppException("Product not found", 404));
+        
+        product.setCaregori(caregories);
+        product.setCreatedAt(LocalDateTime.now());
+        product.setProductName(request.getProductName());
+        product.setPrice(request.getPrice());
+        product.setShopProduct(shop);
+        product.setStock(request.getStock());
+        product.setStatus(request.getStatus());
+        ProductDTO dto=productConverter.setProductDtO(product);
+        return ApiResponse.<ProductDTO>builder()
+                    .status(200)
+                    .message("Đã thêm sản phẩm thành công!")
+                    .data(dto)
+                    .build();
+    }
+
+    @Override
+    public ApiResponse<?> updateProduct(ProductRequest request) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }

@@ -8,5 +8,5 @@ import com.example.java.anishop.repository.entity.Carts;
 
 @Repository
 public interface CartRepository extends JpaRepository<Carts, Long>{
-
+    void deleteByUserCarts_Id(Long id);
 }

@@ -1,5 +1,6 @@
 package com.example.java.anishop;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import org.springframework.boot.CommandLineRunner;
@@ -38,6 +39,8 @@ public class AnishopApplication {
 				Users user=Users.builder()
 				.email("duoc@gmail.com")
 				.password(PasswordEncoder.encode("cuocAdmin"))
+				.createdAt(LocalDateTime.now())
+				.updateAt(LocalDateTime.now())
 				.roles(Set.of(rolesAdmin))
 				.build();
 				

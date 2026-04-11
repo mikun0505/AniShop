@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -52,8 +55,15 @@ public class Users{
     @Column(name="is_active")
     private Boolean isActive;
 
-    @Column(name="create_at")
-    private LocalDateTime createAt;
+    @CreatedDate
+    @Column(name="created_at")
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(name="update_at")
+    private LocalDateTime updateAt;
+    @Column(name="deleted")
+    private Boolean deleted=false;
 
     @ManyToMany(fetch= FetchType.LAZY)
     @JoinTable(

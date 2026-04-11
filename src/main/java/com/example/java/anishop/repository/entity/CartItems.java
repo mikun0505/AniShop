@@ -1,5 +1,10 @@
 package com.example.java.anishop.repository.entity;
 
+import java.time.LocalDateTime;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,12 +34,20 @@ public class CartItems {   // Món hàng trong giỏ
 
     @Column(name="quantity")
     private Long quantity;
+    @CreatedDate
+    @Column(name="created_at")
+    private LocalDateTime createdAt;
 
+    @LastModifiedDate
+    @Column(name="update_at")
+    private LocalDateTime updateAt;
+    @Column(name="deleted")
+    private Boolean deleted=false;
     @ManyToOne
-    @JoinColumn(name="cart_id",insertable=false,updatable = false)
+    @JoinColumn(name="cart_id")
     private Carts cart;
 
     @ManyToOne
-    @JoinColumn(name="product_id",insertable=false,updatable = false)
+    @JoinColumn(name="product_id")
     private Products cartProduct;
 }

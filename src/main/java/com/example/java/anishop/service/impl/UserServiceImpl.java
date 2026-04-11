@@ -14,10 +14,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.java.anishop.exception.AppException;
-import com.example.java.anishop.model.ApiResponse;
-import com.example.java.anishop.model.UserDTO;
-import com.example.java.anishop.model.respose.LoginRequest;
-import com.example.java.anishop.model.respose.RegisterRequest;
+import com.example.java.anishop.model.reponse.ApiResponse;
+import com.example.java.anishop.model.reponse.UserDTO;
+import com.example.java.anishop.model.request.LoginRequest;
+import com.example.java.anishop.model.request.RegisterRequest;
+import com.example.java.anishop.repository.CartRepository;
+import com.example.java.anishop.repository.OrderRepository;
 import com.example.java.anishop.repository.RoleRepository;
 import com.example.java.anishop.repository.UserRepository;
 import com.example.java.anishop.repository.entity.Carts;
@@ -31,6 +33,10 @@ import jakarta.transaction.Transactional;
 @Service
 public class UserServiceImpl implements UserService {
     
+    @Autowired
+    private CartRepository cartRepository;
+    @Autowired
+    private OrderRepository orderRepository;
     @Autowired
     AuthenticationManager authen;
     @Autowired
@@ -49,7 +55,7 @@ public class UserServiceImpl implements UserService {
             dto.setUserId(us.getId());
             dto.setFullName(us.getFullName());
             dto.setAvatar(us.getAvatar());
-            dto.setCreatedAt(us.getCreateAt());
+            dto.setCreatedAt(us.getCreatedAt());
 
             return dto;
         }).collect(Collectors.toList());
@@ -78,15 +84,20 @@ public class UserServiceImpl implements UserService {
             throw new AppException("Email đã tồn tại",400);
 
         }
+        
         Roles role=roleRepo.findByName("ROLE_USER")
-                    .orElseThrow(() -> new AppException("Role không tồn tại", 404));    
+          .orElseGet(()->{
+                        Roles r=new Roles();
+                        r.setName("ROLE_USER");
+                        return  roleRepo.save(r);
+                    });    
 
         Users users=new Users();
         users.setEmail(request.getEmail());
         users.setFullName(request.getName());
         users.setPassword(passwordEncoder.encode(request.getPassword()));
         users.setIsActive(true);
-        users.setCreateAt(LocalDateTime.now());
+        users.setCreatedAt(LocalDateTime.now());
         users.getRoles().add(role);
         Carts cart=new Carts();
         cart.setUserCarts(users);
@@ -99,11 +110,11 @@ public class UserServiceImpl implements UserService {
         udto.setFullName(users.getFullName());
         udto.setAvatar(users.getAvatar());
         udto.setUserId(users.getId());
-        udto.setCreatedAt(users.getCreateAt());
+        udto.setCreatedAt(users.getCreatedAt());
         udto.setIsActive(users.getIsActive());
 
         return ApiResponse.<UserDTO>builder()
-                .status(200)
+                .status(201)
                 .message("Đăng kí thành công")
                 .data(udto)
                 .build();
@@ -128,13 +139,14 @@ public class UserServiceImpl implements UserService {
         }
         throw new AppException("Sai email hoặc password", 401);
     }
-
+    @Transactional
     @Override
     public ApiResponse<?> deleteById(Long id) {
         Users user=userRepository.findById(id)
                 .orElseThrow(() -> new AppException("User không tồn tại",404));
-
-        userRepository.deleteById(id);
+        
+                user.setDeleted(true);
+                user.setIsActive(false);
         return ApiResponse.<String>builder()
                 .status(200)
                 .message("Đã xóa thành công !")

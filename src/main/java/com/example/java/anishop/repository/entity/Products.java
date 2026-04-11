@@ -1,8 +1,12 @@
 package com.example.java.anishop.repository.entity;
 
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,15 +52,25 @@ public class Products {  // Sản phẩm
     @Column(name="status")
     private Boolean status;
     
+    @CreatedDate
+    @Column(name="created_at")
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(name="update_at")
+    private LocalDateTime updateAt;
+    @Column(name="deleted")
+    private Boolean deleted=false;
+    
     @OneToMany(mappedBy="products",fetch=FetchType.LAZY)
     private Set<ProductImages> product=new HashSet<>();
 
     @ManyToOne
-    @JoinColumn(name="category_id",insertable=false,updatable=false)
+    @JoinColumn(name="caregori_id")
     private Caregories caregori;
 
     @ManyToOne
-    @JoinColumn(name="shop_id",insertable=false,updatable=false)
+    @JoinColumn(name="shop_id")
     private Shops shopProduct;
     @OneToMany(mappedBy="cartProduct",fetch=FetchType.LAZY)
     private Set<CartItems> cartItemProduct=new HashSet<>();

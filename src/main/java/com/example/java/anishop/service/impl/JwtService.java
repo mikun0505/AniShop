@@ -16,7 +16,7 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {
 
-    private String serectKey="quT2qiKK0jNsL/kq/adh1kW+QhnrT2E1zcjJSSBZW70r5P9DFoBIRJiQdQ8oWA81F1u5gcZ758dcJ7db1e8cYg==";
+    private String serectKey="FetSXyqNdS9mbCKmGn4lrFjqJkttJ2zu4eZKamDQn0NJX1sqoUGSgw6AGx43t+pHmtYPe8NjNpX4874MZXIUmw==";
 
     public String generateToken(String userName){
         return Jwts.builder()

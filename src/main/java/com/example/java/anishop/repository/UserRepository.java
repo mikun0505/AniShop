@@ -1,6 +1,7 @@
 package com.example.java.anishop.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,7 @@ import com.example.java.anishop.repository.entity.Users;
 public interface UserRepository extends JpaRepository<Users, Long> {
       @Query(value="""
         SELECT u.user_id,u.avatar,u.is_active,u.full_name FROM users u WHERE LOWER(u.full_name) LIKE 
-     LOWER(CONCAT('%', :keyword, '%'))
+     LOWER(CONCAT('%', :keyword, '%')) AND u.is_active=true
              
              """, nativeQuery=true
     )
@@ -21,7 +22,7 @@ public interface UserRepository extends JpaRepository<Users, Long> {
 
     boolean existsByEmail(String email);
 
-    Users findByEmail(String email);
+    Optional<Users> findByEmail(String email);
 
-    void deleteById(Long id);
+    
 }

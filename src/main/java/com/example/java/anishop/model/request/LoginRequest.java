@@ -1,4 +1,4 @@
-package com.example.java.anishop.model.respose;
+package com.example.java.anishop.model.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

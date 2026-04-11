@@ -1,7 +1,11 @@
 package com.example.java.anishop.repository.entity;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,7 +32,7 @@ public class Animes {
     private Long animeId;
 
     @Column(name="mal_id") // max từ API
-    private Long maiId;
+    private Long malId;
 
     @Column(name="title")
     private String title;
@@ -51,6 +55,16 @@ public class Animes {
     @Column(name="status")
     private Boolean status;
 
+    @CreatedDate
+    @Column(name="created_at")
+    private LocalDateTime createdAt;
+    
+    @LastModifiedDate
+    @Column(name="update_at")
+    private LocalDateTime updateAt;
+    
+    @Column(name="deleted")
+    private Boolean deleted=false;
     @ManyToMany(fetch=FetchType.LAZY)
     @JoinTable(
         name="anime_genres",

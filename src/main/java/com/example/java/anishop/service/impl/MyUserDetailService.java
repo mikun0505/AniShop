@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.example.java.anishop.exception.AppException;
 import com.example.java.anishop.repository.UserRepository;
 import com.example.java.anishop.repository.entity.Users;
 import com.example.java.anishop.repository.security.UserPrincipal;
@@ -18,12 +19,8 @@ public class MyUserDetailService implements UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Users user=userRepository.findByEmail(username);
-        if(user==null){
-            System.out.println("Không đăng nhập được !");
-            throw new UsernameNotFoundException("Users Not Found");
-
-        }
+        Users user=userRepository.findByEmail(username)
+             .orElseThrow(()-> new AppException("Users not Found", 404));
         return new UserPrincipal(user);
     }
 

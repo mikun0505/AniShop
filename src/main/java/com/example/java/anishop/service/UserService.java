@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.example.java.anishop.model.ApiResponse;
-import com.example.java.anishop.model.UserDTO;
-import com.example.java.anishop.model.respose.LoginRequest;
-import com.example.java.anishop.model.respose.RegisterRequest;
+import com.example.java.anishop.model.reponse.ApiResponse;
+import com.example.java.anishop.model.reponse.UserDTO;
+import com.example.java.anishop.model.request.LoginRequest;
+import com.example.java.anishop.model.request.RegisterRequest;
 
 
 @Service
@@ -16,6 +16,8 @@ public interface UserService {
     UserDTO searchId(Long id);
     ApiResponse<?> register(RegisterRequest request);
     ApiResponse<?> login(LoginRequest login);
-
+    
+    // xóa user 
     ApiResponse<?> deleteById(Long id);
+ 
 }

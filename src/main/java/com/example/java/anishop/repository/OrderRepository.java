@@ -15,4 +15,5 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
     //         +"WHERE p.shopId = :shopId"
     //         )
     // List<Orders> orders(@Param("shopId") Long shopId);
+    void deleteByUserOrder_Id(Long id);
 }

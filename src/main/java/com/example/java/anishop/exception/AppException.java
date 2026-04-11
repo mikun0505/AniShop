@@ -11,4 +11,5 @@ public class AppException extends RuntimeException {
     public int getStatusCode() {
         return statusCode;
     }
+ 
 }

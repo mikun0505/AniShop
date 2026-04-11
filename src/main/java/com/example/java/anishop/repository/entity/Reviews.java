@@ -2,6 +2,9 @@ package com.example.java.anishop.repository.entity;
 
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,16 +36,22 @@ public class Reviews {  //Bình luận
 
     @Column(name="rating")
     private Integer rating;
-
+    @CreatedDate
     @Column(name="created_at")
     private LocalDateTime createdAt;
+    @LastModifiedDate
+    @Column(name="update_at")
+    private LocalDateTime updateAt;
+    
+    @Column(name="deleted")
+    private Boolean deleted=false;
 
     @ManyToOne
-    @JoinColumn(name="user_id",insertable=false,updatable=false)
+    @JoinColumn(name="user_id")
     private Users reviewUser;
 
     @ManyToOne
-    @JoinColumn(name="anime_id",insertable=false,updatable=false)
+    @JoinColumn(name="anime_id")
     private Animes reviewAnime;
 
 }

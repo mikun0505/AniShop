@@ -34,7 +34,7 @@ public class RefreshToken {  // Mã đựng Token
     private LocalDateTime expiryDate;
     
     @ManyToOne
-    @JoinColumn(name="user_id",insertable=false,updatable=false)
+    @JoinColumn(name="user_id")
     private Users user;
 
 }

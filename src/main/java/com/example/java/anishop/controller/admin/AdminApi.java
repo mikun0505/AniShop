@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.java.anishop.model.ApiResponse;
+import com.example.java.anishop.model.reponse.ApiResponse;
 import com.example.java.anishop.service.UserService;
 
 import jakarta.validation.constraints.Min;

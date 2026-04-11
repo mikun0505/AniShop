@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.java.anishop.model.ProductDTO;
+import com.example.java.anishop.model.reponse.ProductDTO;
 import com.example.java.anishop.service.ProductService;
 
 

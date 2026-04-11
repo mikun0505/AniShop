@@ -4,6 +4,10 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -30,9 +34,16 @@ public class Carts {  // Giỏ hàng
     // @Column(name="user_id")
     // private Long userId;
 
+  
+    @CreatedDate
     @Column(name="created_at")
     private LocalDateTime createdAt;
 
+    @LastModifiedDate
+    @Column(name="update_at")
+    private LocalDateTime updateAt;
+    @Column(name="deleted")
+    private Boolean deleted=false;
     @OneToOne
     @JoinColumn(name="user_id")
     private Users userCarts;

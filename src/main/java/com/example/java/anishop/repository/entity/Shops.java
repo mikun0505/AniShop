@@ -1,10 +1,14 @@
 package com.example.java.anishop.repository.entity;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,7 +31,7 @@ public class Shops {
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long ShopId;
+    private Long shopId;
 
     // @Column(name="user_id", insertable=false, updatable=false)
     // private Long userId;
@@ -45,8 +49,16 @@ public class Shops {
     @Column(name="is_active")
     private Boolean isActive;
 
+    @CreatedDate
+    @Column(name="created_at")
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    @Column(name="update_at")
+    private LocalDateTime updateAt;
+    @Column(name="deleted")
+    private Boolean deleted=false;
     @ManyToOne
-    @JoinColumn(name="user_id",insertable=false,updatable=false)
+    @JoinColumn(name="user_id")
     private Users userShop;
 
 

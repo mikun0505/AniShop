@@ -1,4 +1,4 @@
-package com.example.java.anishop.model;
+package com.example.java.anishop.model.reponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.java.anishop.model.ApiResponse;
-import com.example.java.anishop.model.respose.LoginRequest;
-import com.example.java.anishop.model.respose.RegisterRequest;
+import com.example.java.anishop.model.reponse.ApiResponse;
+import com.example.java.anishop.model.request.LoginRequest;
+import com.example.java.anishop.model.request.RegisterRequest;
 import com.example.java.anishop.service.UserService;
 
 import jakarta.validation.Valid;
