@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.example.java.anishop.converter.MapperConverter;
 import com.example.java.anishop.enums.OrderStatus;
@@ -25,6 +26,7 @@ import com.example.java.anishop.util.SecurityUtils;
 
 import jakarta.transaction.Transactional;
 
+@Service
 public class CheckoutServiceImpl implements CheckoutService{
 
     @Autowired

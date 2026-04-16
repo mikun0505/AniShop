@@ -18,8 +18,6 @@ import com.example.java.anishop.model.reponse.ApiResponse;
 import com.example.java.anishop.model.reponse.UserDTO;
 import com.example.java.anishop.model.request.LoginRequest;
 import com.example.java.anishop.model.request.RegisterRequest;
-import com.example.java.anishop.repository.CartRepository;
-import com.example.java.anishop.repository.OrderRepository;
 import com.example.java.anishop.repository.RoleRepository;
 import com.example.java.anishop.repository.UserRepository;
 import com.example.java.anishop.repository.entity.Carts;
@@ -33,10 +31,6 @@ import jakarta.transaction.Transactional;
 @Service
 public class UserServiceImpl implements UserService {
     
-    @Autowired
-    private CartRepository cartRepository;
-    @Autowired
-    private OrderRepository orderRepository;
     @Autowired
     AuthenticationManager authen;
     @Autowired
@@ -129,7 +123,7 @@ public class UserServiceImpl implements UserService {
             
             if(authentication.isAuthenticated()){
                 Map<String,String> token=new HashMap<>();
-                token.put("acessToken",jwtService.generateToken(login.getEmail()));
+                token.put("accessToken",jwtService.generateToken(login.getEmail()));
                 token.put("refreshToken", jwtService.generefreshToken(login.getEmail()));
                 return ApiResponse.<Map<String,String>>builder()
                 .status(200)

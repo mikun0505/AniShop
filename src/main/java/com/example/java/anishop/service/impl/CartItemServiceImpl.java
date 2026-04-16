@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.example.java.anishop.converter.MapperConverter;
 import com.example.java.anishop.exception.AppException;
 import com.example.java.anishop.model.reponse.ApiResponse;
 import com.example.java.anishop.model.reponse.CartItemDTO;
+import com.example.java.anishop.model.request.CartItemRequest;
 import com.example.java.anishop.repository.CartItemRepository;
 import com.example.java.anishop.repository.CartRepository;
 import com.example.java.anishop.repository.ProductRepository;
@@ -19,6 +21,7 @@ import com.example.java.anishop.service.CartItemService;
 
 import jakarta.transaction.Transactional;
 
+@Service
 public class CartItemServiceImpl implements CartItemService{
 
     @Autowired
@@ -53,22 +56,22 @@ public class CartItemServiceImpl implements CartItemService{
 
     @Transactional
     @Override
-    public ApiResponse<?> addCartItem(Long userId, Long productId, Long quantity) {
-        Carts carts=cartRepository.findByUserCartsIdAndDeletedFalse(userId)
+    public ApiResponse<?> addCartItem(CartItemRequest request) {
+        Carts carts=cartRepository.findByUserCartsIdAndDeletedFalse(request.getUserId())
                     .orElseThrow(()-> new AppException("Không thể truy cập",403));
 
-        Products products=productRepository.findById(productId)
+        Products products=productRepository.findById(request.getProductId())
                 .orElseThrow(()-> new AppException("Không tìm thấy sản phẩm", 404));
                 
-        CartItems cartItem=cartItemRepository.findByCartCartsIdAndCartProductProductIdAndDeletedFalse(carts.getCartsId(),productId)
+        CartItems cartItem=cartItemRepository.findByCartCartsIdAndCartProductProductIdAndDeletedFalse(carts.getCartsId(),request.getProductId())
                     .map(it->{
-                        it.setQuantity(it.getQuantity()+quantity);
+                        it.setQuantity(it.getQuantity()+request.getQuantity());
                         return cartItemRepository.save(it); 
                     }).orElseGet(()->{
                         CartItems items=new CartItems();
                         items.setCart(carts);
                         items.setCartProduct(products);
-                        items.setQuantity(quantity);
+                        items.setQuantity(request.getQuantity());
                         return cartItemRepository.save(items);
                     });
 
@@ -83,13 +86,18 @@ public class CartItemServiceImpl implements CartItemService{
     
     @Transactional
     @Override
-    public ApiResponse<?> updateCartItem(Long cartItemId, Long quantity) {
-        CartItems cartItems=cartItemRepository.findById(cartItemId)
+    public ApiResponse<?> updateCartItem(CartItemRequest request) {
+        Carts carts=cartRepository.findByUserCartsIdAndDeletedFalse(request.getUserId())
+            .orElseThrow(()-> new AppException("Không thể truy cập",403));
+
+    Products products=productRepository.findById(request.getProductId())
+        .orElseThrow(()-> new AppException("Không tìm thấy sản phẩm", 404));
+        CartItems cartItems=cartItemRepository.findById(request.getCartItemId())
                     .orElseThrow(()-> new AppException("không tìm thấy sản phẩm trong giỏ hàng", 404));
-        if(quantity<=0){
+        if(request.getQuantity()<=0){
             cartItems.setDeleted(true);
         }else{
-            cartItems.setQuantity(quantity);
+            cartItems.setQuantity(request.getQuantity());
         }
 
         CartItemDTO dto=productConverter.setCartItemDTO(cartItems);

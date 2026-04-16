@@ -13,7 +13,7 @@ public class CartItemRequest {
 
     @NotNull(message="cartId mục không được trống")
     @Size(min=1,message="Không được âm hay bằng 0")
-    private Long cartId;
+    private Long userId;
 
     @NotNull(message="productId mục không được trống")
     @Size(min=1,message="Không được âm hay bằng 0")

@@ -27,7 +27,7 @@ public class AnishopApplication {
 		RoleRepository roleRepository
 	){
 		return args -> {
-			if(userRepo.findByEmail("duoc@gmail.com")==null){
+			if(userRepo.findByEmail("duoc@gmail.com").isEmpty()){
 				if(roleRepository.findByName("ROLE_ADMIN").isEmpty()){
 					Roles role=new Roles();
 					role.setName("ROLE_ADMIN");

@@ -22,7 +22,17 @@ public class UserPrincipal implements UserDetails{
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return user.getRoles().stream()
-        .map(role -> new SimpleGrantedAuthority(role.getName()))
+        .flatMap(role -> {
+            try {
+                return com.example.java.anishop.enums.Role
+                    .valueOf(role.getName().replace("ROLE_", ""))
+                    .getAuthorites().stream();
+            } catch (Exception e) {
+                return java.util.stream.Stream.of(
+                    new SimpleGrantedAuthority(role.getName())
+                );
+            }
+        })
         .collect(Collectors.toList());
     }
 

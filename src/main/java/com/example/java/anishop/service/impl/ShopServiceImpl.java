@@ -127,6 +127,7 @@ public class ShopServiceImpl implements ShopService {
         validateShopOwner(shop, email);
 
         shop.setIsActive(!shop.getIsActive());
+        shopRepository.save(shop);
         ShopDTO dto=shopConveter.setShopDTO(shop);
         return ApiResponse.<ShopDTO>builder()
                     .status(200)

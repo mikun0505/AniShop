@@ -1,5 +1,6 @@
 package com.example.java.anishop.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.example.java.anishop.converter.MapperConverter;
 import com.example.java.anishop.exception.AppException;
@@ -12,6 +13,7 @@ import com.example.java.anishop.repository.entity.Users;
 import com.example.java.anishop.service.CartService;
 import com.example.java.anishop.util.SecurityUtils;
 
+@Service
 public class CartServiceImpl implements CartService{
 
     @Autowired

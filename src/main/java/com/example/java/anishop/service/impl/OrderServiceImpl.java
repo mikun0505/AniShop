@@ -11,6 +11,7 @@ import com.example.java.anishop.enums.OrderStatus;
 import com.example.java.anishop.exception.AppException;
 import com.example.java.anishop.model.reponse.ApiResponse;
 import com.example.java.anishop.model.reponse.OrderDTO;
+import com.example.java.anishop.model.request.OrderRequest;
 import com.example.java.anishop.repository.OrderRepository;
 import com.example.java.anishop.repository.ShopRepository;
 import com.example.java.anishop.repository.entity.Orders;
@@ -65,18 +66,18 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public ApiResponse<?> updateOrderStatus(Long orderId, String status,Long shopId) {
+    public ApiResponse<?> updateOrderStatus(OrderRequest request) {
         String email=securityUtils.getCurrentUserEmail();
 
-        Shops shop=shopRepository.findByShopIdAndDeletedFalse(shopId)
+        Shops shop=shopRepository.findByShopIdAndDeletedFalse(request.getShopId())
                 .orElseThrow(()-> new AppException("Không tìm thấy shop", 404));
         // kiểm ta có phải chủ shop kh
         shopService.validateShopOwner(shop, email);
         
-        Orders order=orderRepository.findById(orderId)
+        Orders order=orderRepository.findById(request.getOrderId())
                     .orElseThrow(()-> new AppException("Không tìm thấy mã đơn hàng ",404));
         try{
-            order.setStatus(OrderStatus.valueOf(status.toUpperCase()));
+            order.setStatus(OrderStatus.valueOf(request.getStatus().toUpperCase()));
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -84,7 +85,7 @@ public class OrderServiceImpl implements OrderService {
         return ApiResponse.<String>builder()
                 .status(200)
                 .message("Đã cập nhật thành công")
-                .data(status)
+                .data(request.getStatus())
                 .build();
     }
 
