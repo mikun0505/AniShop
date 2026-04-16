@@ -43,7 +43,6 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.DELETE,"/api/admin/**").hasAuthority(ADMIN_DELETE.name())
                 .requestMatchers(HttpMethod.PUT,"/api/admin/**").hasAuthority(ADMIN_UPDATE.name())
                 .requestMatchers(HttpMethod.GET,"/api/admin/**").hasAuthority(ADMIN_READ.name())
-                        
                 .requestMatchers("/api/admin/**").hasRole(ADMIN.name())
                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

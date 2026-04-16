@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.java.anishop.converter.ProductConverter;
+import com.example.java.anishop.converter.MapperConverter;
 import com.example.java.anishop.exception.AppException;
 import com.example.java.anishop.model.reponse.ApiResponse;
 import com.example.java.anishop.model.reponse.ShopDTO;
@@ -28,7 +28,7 @@ public class ShopServiceImpl implements ShopService {
     @Autowired
     private SecurityUtils security;
     @Autowired
-    private ProductConverter shopConveter;
+    private MapperConverter shopConveter;
     @Autowired
     private ShopRepository shopRepository;
     @Override

@@ -23,4 +23,6 @@ public interface ShopRepository extends JpaRepository<Shops, Long>{
     List<Shops> findByDeletedFalse();
     //tìm users Chưa bị xóa
     Optional<Shops> findByShopIdAndDeletedFalse(Long id);
+    // tìm shop theo user chưa xóa 
+    Shops findByUserShopIdAndDeletedFalse(Long userId);
 }

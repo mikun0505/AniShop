@@ -1,5 +1,7 @@
 package com.example.java.anishop.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,4 +18,8 @@ public interface OrderRepository extends JpaRepository<Orders, Long> {
     //         )
     // List<Orders> orders(@Param("shopId") Long shopId);
     void deleteByUserOrder_Id(Long id);
+
+
+    // tìm xem thử có đúng ng dùng đặt hàng kh
+    List<Orders> findByUserOrderIdAndDeletedFalse(Long userId);
 }

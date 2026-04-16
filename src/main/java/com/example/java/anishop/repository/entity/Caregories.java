@@ -22,10 +22,10 @@ public class Caregories {   // Danh mục
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long caregorieId;
+    private Long caregoryId;
  
     @Column(name="caregori_name")
-    private String caregoriName;
+    private String caregoryName;
 
     @OneToMany(mappedBy="caregori",fetch=FetchType.LAZY)
     private Set<Products> cate=new HashSet<>(); 

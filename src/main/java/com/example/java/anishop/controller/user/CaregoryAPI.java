@@ -29,7 +29,7 @@ public class CaregoryAPI {
         return ResponseEntity.ok(caregoryService.findCaregoryId(id));
     }
 
-    @GetMapping("/api.caregories")
+    @GetMapping("/api/caregories")
     public ResponseEntity<ApiResponse<?>> getMethodName() {
         return ResponseEntity.ok(caregoryService.findAllCaregory());
     }
@@ -47,7 +47,7 @@ public class CaregoryAPI {
         //TODO: process POST request
 
         
-        return ResponseEntity.ok(caregoryService.createdCaregori(request));
+        return ResponseEntity.ok(caregoryService.updateCaregory(request));
     }
 
     @DeleteMapping("/api/caregories/{id}")

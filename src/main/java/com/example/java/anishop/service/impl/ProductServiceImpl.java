@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.java.anishop.builder.ProductSearchBuilder;
-import com.example.java.anishop.converter.ProductConverter;
+import com.example.java.anishop.converter.MapperConverter;
 import com.example.java.anishop.converter.builderConveter.ProductSearchBuilderConveter;
 import com.example.java.anishop.exception.AppException;
 import com.example.java.anishop.model.reponse.ApiResponse;
@@ -43,30 +43,48 @@ public class ProductServiceImpl implements ProductService{
     // @Autowired
     // private ProductSearchBuilder productSearchBuilder;
     @Autowired
-    private ProductConverter productConverter;
+    private MapperConverter productConverter;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private SecurityUtils securityUtils;
     @Override
-    public List<ProductDTO> findById(Long id) {
-        List<ProductDTO> product=new ArrayList<>();
-        Products products=productRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Product not found"));
-        product.add(productConverter.setProductDtO(products));
-        return product;
+    public ApiResponse<?> findById(Long id) {
+        try{
+            List<Products> products=productRepository.findByProductIdAndDeletedFalse(id);
+            if(products.isEmpty()){
+                throw new AppException("Không tìm thấy sản phẩm",404);
+            }
+            List<ProductDTO> product=products.stream()
+                    .map(it->{
+                        ProductDTO dto=productConverter.setProductDtO(it);
+                        dto.setCategoryId(it.getCaregori().getCaregoryId());
+                        dto.setCategoryName(it.getCaregori().getCaregoryName());
+                        return dto;
+                    }).collect(Collectors.toList());
+            return ApiResponse.<List<ProductDTO>>builder()
+                        .status(200)
+                        .message("Đã tìm thấy")
+                        .data(product)
+                        .build();
+        }catch(Exception e){
+            e.printStackTrace();
+            throw e;
+        }
        
 
     }
 
     @Override
-    public List<ProductDTO> findAll(Map<String, Object> params) {
+    public ApiResponse<?> findAllProducts(Map<String, Object> params) {
         ProductSearchBuilder product=productSearchBuilderConveter.productSearchBuilder(params);
-        List<Products> prodList=productRepository.findAll(product);
-        List<ProductDTO> productDTOs=new ArrayList<ProductDTO>();
+        List<Products> prodList=productRepository.findAllProducts(product);
+        List<ProductDTO> productDTOs=new ArrayList<>();
         if(prodList!=null){
             for(Products it:prodList){
                 ProductDTO productDTO=productConverter.setProductDtO(it);
-                productDTO.setCategoryName(it.getCaregori().getCaregoriName());
-                productDTO.setCategoryId(it.getCaregori().getCaregorieId());
+                productDTO.setCategoryName(it.getCaregori().getCaregoryName());
+                productDTO.setCategoryId(it.getCaregori().getCaregoryId());
                 List<OrderDetailDTO> productOrderDetails=it.getOrderDetailProduct().stream()  // chuyển set -> list
                 .map(od ->{
                     OrderDetailDTO dto=new OrderDetailDTO();    // đẩy DTO vào để set vào ProductDTO do nó nhận OrderDetailsDTO
@@ -87,30 +105,35 @@ public class ProductServiceImpl implements ProductService{
 
             }
         }
-        return productDTOs;
+        return ApiResponse.<List<ProductDTO>>builder()
+                    .status(200)
+                    .message("Đã tìm thấy")
+                    .data(productDTOs)
+                    .build();
     }
 
     @Override
     public ApiResponse<?> createdProduct(ProductRequest request) {
-        String email=SecurityUtils.getCurrentUserEmail();
+        String email=securityUtils.getCurrentUserEmail();
         Shops shop=shopRepository.findById(request.getShopId())
                     .orElseThrow(()-> new AppException("Shop not found",404));
 
-        Caregories caregories=caregoriRepository.findById(request.getCarigoruId())
+        Caregories caregories=caregoriRepository.findById(request.getCaregoryId())
                 .orElseThrow(()-> new AppException("Caregories not found",404));
 
         shopService.validateShopOwner(shop, email);
 
-        Products product=productRepository.findById(request.getProductId())
-                    .orElseThrow(()-> new AppException("Product not found", 404));
-        
+        Products product=new Products();
         product.setCaregori(caregories);
         product.setCreatedAt(LocalDateTime.now());
         product.setProductName(request.getProductName());
         product.setPrice(request.getPrice());
         product.setShopProduct(shop);
+        product.setCaregori(caregories);
+        product.setDescription(request.getDescription());
         product.setStock(request.getStock());
         product.setStatus(request.getStatus());
+        productRepository.save(product);
         ProductDTO dto=productConverter.setProductDtO(product);
         return ApiResponse.<ProductDTO>builder()
                     .status(200)
@@ -121,7 +144,77 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ApiResponse<?> updateProduct(ProductRequest request) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String email=securityUtils.getCurrentUserEmail();
+        Shops shop=shopRepository.findById(request.getShopId())
+                    .orElseThrow(()-> new AppException("Shop not found",404));
+        Products product=productRepository.findById(request.getProductId())
+                        .orElseThrow(()-> new AppException("Không tìm thấy sản phẩm", 404));
+        
+        Caregories caregories=caregoriRepository.findById(request.getCaregoryId())
+                        .orElseThrow(()-> new AppException("Không tìm thấy danh mục", 404));
+
+                    
+        if(request.getProductName()!=null){
+            product.setProductName(request.getProductName());
+        }
+        if(request.getDescription()!=null){
+            product.setDescription(request.getDescription());
+        }
+        if(request.getPrice()!=null){
+            product.setPrice(request.getPrice());
+        }
+        if(request.getImgUrl()!=null){
+            product.setProduct(request.getImgUrl().stream()
+                .map( us->{
+                    ProductImages img=new ProductImages();
+                    img.setImageUrl(us);  // gán ảnh
+                    img.setProducts(product);  // map ngược lại
+                    return img;
+                }).collect(Collectors.toSet()));
+        }
+
+        if(request.getStock()!=null){
+            product.setStock(request.getStock());
+        }
+        if(request.getStatus()!=null){
+            product.setStatus(request.getStatus());
+        }
+
+        productRepository.save(product);
+        ProductDTO dto=productConverter.setProductDtO(product);
+
+        return ApiResponse.<ProductDTO>builder()
+                    .status(200)
+                    .message("Đã update thành công")
+                    .data(dto)
+                    .build();
+    }
+
+    @Override
+    public ApiResponse<?> deletedProduct(Long shopId,Long productId) {
+       try{ String email=securityUtils.getCurrentUserEmail();
+
+            Shops shop=shopRepository.findById(shopId)
+                    .orElseThrow(()-> new AppException("Không tìm thấy shop",404));
+
+        shopService.validateShopOwner(shop, email);
+
+            Products product=productRepository.findById(productId)
+                    .orElseThrow(()-> new AppException("Không tìm thấy sản phẩm để xóa", 404));
+        
+        product.setDeleted(true);
+        productRepository.save(product);
+        ProductDTO dto=productConverter.setProductDtO(product);
+
+        return ApiResponse.<ProductDTO>builder()
+                        .status(204)
+                        .message("Đã xóa thành công")
+                        .data(dto)
+                        .build();
+       }catch(Exception e){
+            e.printStackTrace();
+            throw e;
+       }
     }
 
 }

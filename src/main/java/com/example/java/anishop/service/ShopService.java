@@ -18,6 +18,7 @@ public interface ShopService {
     ShopDTO findByIdAndDeletedFalse(Long id);
     // shop của t
     List<ShopDTO>  myShop();    
+    // kiểm tra xem users của ng dùng có đúng với shop đó hay kh
     void validateShopOwner(Shops shop,String email);
     ApiResponse<?> createdShop(ShopRequest shop);
     ApiResponse<?> updateShop(Long id,ShopRequest request);

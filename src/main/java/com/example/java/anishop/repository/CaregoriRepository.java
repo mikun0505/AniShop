@@ -11,9 +11,9 @@ import com.example.java.anishop.repository.entity.Caregories;
 @Repository
 public interface CaregoriRepository extends JpaRepository<Caregories, Long> {
     // kiểm tra danh mục đã tồn tại chưa
-    boolean existsByCaregoriName(String caregoriName);
+    boolean existsByCaregoryName(String caregoriName);
     // tiếm kiếm theo name
     
-    Optional<Caregories> findByCaregoriName(String caregoriName);
-
+    Optional<Caregories> findByCaregoryName(String caregoryName);
+    
 }

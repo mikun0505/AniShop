@@ -25,7 +25,7 @@ public class ProductRequest {
     private Long shopId; 
 
     @NotNull(message="Danh mục kh được trống")
-    private Long carigoruId;
+    private Long caregoryId;
 
     @NotNull(message="Giá kh được rổng")
     private Double price;

@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.java.anishop.converter.ProductConverter;
+import com.example.java.anishop.converter.MapperConverter;
 import com.example.java.anishop.exception.AppException;
 import com.example.java.anishop.model.reponse.ApiResponse;
 import com.example.java.anishop.model.reponse.CaregoryDTO;
@@ -21,16 +21,17 @@ public class CaregoryServiceImpl implements CaregoryService{
     @Autowired
     private CaregoriRepository caregoriRepository;
     @Autowired
-    private ProductConverter caregoryConveter;
+    private MapperConverter caregoryConveter;
     @Override
     public ApiResponse<?> createdCaregori(CaregoryRequest request) {
         
-        if(caregoriRepository.findByCaregoriName(request.getCaregoryName()).isPresent()){  // isPresent tồn tại trong thư viện Optional dung để kiểm ta xem thử đã tồn tại ch
+        if(caregoriRepository.findByCaregoryName(request.getCaregoryName()).isPresent()){  // isPresent tồn tại trong thư viện Optional dung để kiểm ta xem thử đã tồn tại ch
             throw new RuntimeException("Caregory đã tồn tại");
         }
         
         Caregories caregories=new Caregories();
-        caregories.setCaregoriName(request.getCaregoryName());
+        caregories.setCaregoryName(request.getCaregoryName());
+        caregoriRepository.save(caregories);
         CaregoryDTO dto=caregoryConveter.setCaregoryDTO(caregories);
         return ApiResponse.<CaregoryDTO>builder()
                 .status(201)
@@ -44,7 +45,7 @@ public class CaregoryServiceImpl implements CaregoryService{
         Caregories caregories=caregoriRepository.findById(request.getCaregoryId())
                 .orElseThrow(()-> new AppException("Danh mục không tồn tại", 404));
 
-        caregories.setCaregoriName(request.getCaregoryName());
+        caregories.setCaregoryName(request.getCaregoryName());
         CaregoryDTO dto=caregoryConveter.setCaregoryDTO(caregories);
         return ApiResponse.<CaregoryDTO>builder()
                     .status(200)
