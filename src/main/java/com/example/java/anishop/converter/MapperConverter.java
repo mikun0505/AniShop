@@ -70,4 +70,6 @@ public class MapperConverter {
         OrderDetailDTO dto=model.map( orderDeatDetails, OrderDetailDTO.class);
         return dto;
     }
-}
+   
+ }
+

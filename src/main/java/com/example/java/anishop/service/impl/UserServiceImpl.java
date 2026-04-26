@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private JwtService jwtService;
     @Override
-    public List<UserDTO> searcUser(String keyword) {
+    public List<UserDTO> searchUser(String keyword) {
         List<UserDTO> user=userRepository.searchUser(keyword)
         .stream().map((var us)-> {   // us lấy từ entity
             UserDTO dto=new UserDTO();
@@ -60,9 +60,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO searchId(Long id) {
-        Users searchId=userRepository.findById(id).get();
+        Users searchId=userRepository.findById(id)
+                .orElseThrow(()-> new AppException("Không tìm thấy Users", 404));
         UserDTO result=new UserDTO();
-        result.setUserId(searchId.getId());
+        
         result.setAvatar(searchId.getAvatar());
         result.setFullName(searchId.getFullName());
         result.setIsActive(searchId.getIsActive());
@@ -75,7 +76,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ApiResponse<?> register(RegisterRequest request) {
         if(userRepository.existsByEmail(request.getEmail())){
-            throw new AppException("Email đã tồn tại",400);
+            throw new AppException("Email đã tồn tại",404);
 
         }
         

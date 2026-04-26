@@ -31,8 +31,8 @@ public class Animes {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long animeId;
 
-    @Column(name="mal_id") // max từ API
-    private Long malId;
+    @Column(name="anilist_id") // max từ API
+    private Long anilistId;
 
     @Column(name="title")
     private String title;
@@ -63,8 +63,6 @@ public class Animes {
     @Column(name="update_at")
     private LocalDateTime updateAt;
     
-    @Column(name="deleted")
-    private Boolean deleted=false;
     @ManyToMany(fetch=FetchType.LAZY)
     @JoinTable(
         name="anime_genres",

@@ -12,7 +12,7 @@ import com.example.java.anishop.model.request.RegisterRequest;
 
 @Service
 public interface UserService {
-    List<UserDTO> searcUser(String keyword);
+    List<UserDTO> searchUser(String keyword);
     UserDTO searchId(Long id);
     ApiResponse<?> register(RegisterRequest request);
     ApiResponse<?> login(LoginRequest login);

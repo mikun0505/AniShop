@@ -23,72 +23,72 @@ public class ProductRepositoryImpl implements ProductCustomRepository{
     private EntityManager entityManager;
 
     public void queryNormal(ProductSearchBuilder productSearchBuilder,StringBuilder where,Map<String,Object> params){
-            try{
-                Field[] fields=productSearchBuilder.getClass().getDeclaredFields();  // lấy tất cả cacs field trong ProductSearchBuilder
-                for(Field it:fields){
-                    it.setAccessible(true); // cho phép đọc field dù là private
-                    String fieldName=it.getName();
-                    if(!fieldName.equals("productId")){
-                        Object value=it.get(productSearchBuilder);
-                        if(value!=null){
-                            if(it.getType().getName().equals("java.lang.Long")){
-                                where.append(" AND p.").append(fieldName).append(" = :").append(fieldName);
-                                params.put(fieldName, value);
-                            }else if(it.getType().getName().equals("java.lang.Double")){
-                                where.append(" AND p.").append(fieldName).append(" = :").append(fieldName);
-                                params.put(fieldName, value);
-                            }
-                            else{
-                                where.append(" AND p.").append(fieldName).append(" LIKE :").append(fieldName);
-                                params.put(fieldName, "%"+value+"%");
-                            }
+            // try{
+            //     Field[] fields=productSearchBuilder.getClass().getDeclaredFields();  // lấy tất cả cacs field trong ProductSearchBuilder
+            //     for(Field it:fields){
+            //         it.setAccessible(true); // cho phép đọc field dù là private
+            //         String fieldName=it.getName();
+            //         if(!fieldName.equals("productId")){
+            //             Object value=it.get(productSearchBuilder);
+            //             if(value!=null){
+            //                 if(it.getType().getName().equals("java.lang.Long")){
+            //                     where.append(" AND p.").append(fieldName).append(" = :").append(fieldName);
+            //                     params.put(fieldName, value);
+            //                 }else if(it.getType().getName().equals("java.lang.Double")){
+            //                     where.append(" AND p.").append(fieldName).append(" = :").append(fieldName);
+            //                     params.put(fieldName, value);
+            //                 }
+            //                 else{
+            //                     where.append(" AND p.").append(fieldName).append(" LIKE :").append(fieldName);
+            //                     params.put(fieldName, "%"+value+"%");
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }catch(Exception e){
+            //     e.printStackTrace();
+            // }
+            
+                try {
+                    Field[] fields = productSearchBuilder.getClass().getDeclaredFields();
+                    for (Field it : fields) {
+                        it.setAccessible(true);
+                        String fieldName = it.getName();
+                        Object value = it.get(productSearchBuilder);
+            
+                        if (value == null || fieldName.equals("productId")) continue;
+            
+                        if (fieldName.equals("shopId")) {
+                            // shopId không có trực tiếp trong entity, phải đi qua relation
+                            where.append(" AND p.shopProduct.shopId = :shopId");
+                            params.put("shopId", value);
+            
+                        } else if (fieldName.equals("categoryId")) {
+                            // categoryId không có trực tiếp trong entity, phải đi qua relation
+                            where.append(" AND p.caregori.caregoryId = :categoryId");
+                            params.put("categoryId", value);
+            
+                        } else if (fieldName.equals("priceMin")) {
+                            where.append(" AND p.price >= :priceMin");
+                            params.put("priceMin", value);
+            
+                        } else if (fieldName.equals("priceMax")) {
+                            where.append(" AND p.price <= :priceMax");
+                            params.put("priceMax", value);
+            
+                        } else if (it.getType() == Long.class || it.getType() == Double.class || it.getType() == Boolean.class) {
+                            where.append(" AND p.").append(fieldName).append(" = :").append(fieldName);
+                            params.put(fieldName, value);
+            
+                        } else {
+                            // String -> dùng LIKE
+                            where.append(" AND p.").append(fieldName).append(" LIKE :").append(fieldName);
+                            params.put(fieldName, "%" + value + "%");
                         }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            
-                // try {
-                //     Field[] fields = productSearchBuilder.getClass().getDeclaredFields();
-                //     for (Field it : fields) {
-                //         it.setAccessible(true);
-                //         String fieldName = it.getName();
-                //         Object value = it.get(productSearchBuilder);
-            
-                //         if (value == null || fieldName.equals("productId")) continue;
-            
-                //         if (fieldName.equals("shopId")) {
-                //             // shopId không có trực tiếp trong entity, phải đi qua relation
-                //             where.append(" AND p.shopProduct.shopId = :shopId");
-                //             params.put("shopId", value);
-            
-                //         } else if (fieldName.equals("categoryId")) {
-                //             // categoryId không có trực tiếp trong entity, phải đi qua relation
-                //             where.append(" AND p.caregori.caregoryId = :categoryId");
-                //             params.put("categoryId", value);
-            
-                //         } else if (fieldName.equals("priceMin")) {
-                //             where.append(" AND p.price >= :priceMin");
-                //             params.put("priceMin", value);
-            
-                //         } else if (fieldName.equals("priceMax")) {
-                //             where.append(" AND p.price <= :priceMax");
-                //             params.put("priceMax", value);
-            
-                //         } else if (it.getType() == Long.class || it.getType() == Double.class || it.getType() == Boolean.class) {
-                //             where.append(" AND p.").append(fieldName).append(" = :").append(fieldName);
-                //             params.put(fieldName, value);
-            
-                //         } else {
-                //             // String -> dùng LIKE
-                //             where.append(" AND p.").append(fieldName).append(" LIKE :").append(fieldName);
-                //             params.put(fieldName, "%" + value + "%");
-                //         }
-                //     }
-                // } catch (Exception e) {
-                //     e.printStackTrace();
-                // }
      }
     
 

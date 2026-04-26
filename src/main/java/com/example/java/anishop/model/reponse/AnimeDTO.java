@@ -10,7 +10,7 @@ import lombok.Setter;
 public class AnimeDTO {
     private Long animeId;
     private String animeName;
-    private Long malId;
+    private Long anilistId;
     private String coverImg;
     private Float score;
     private Long episodes;

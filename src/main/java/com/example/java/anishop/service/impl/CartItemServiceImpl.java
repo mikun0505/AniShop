@@ -1,5 +1,6 @@
 package com.example.java.anishop.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Service;
 import com.example.java.anishop.converter.MapperConverter;
 import com.example.java.anishop.exception.AppException;
 import com.example.java.anishop.model.reponse.ApiResponse;
+import com.example.java.anishop.model.reponse.CartDTO;
 import com.example.java.anishop.model.reponse.CartItemDTO;
+import com.example.java.anishop.model.reponse.ProductDTO;
 import com.example.java.anishop.model.request.CartItemRequest;
 import com.example.java.anishop.repository.CartItemRepository;
 import com.example.java.anishop.repository.CartRepository;
@@ -57,6 +60,7 @@ public class CartItemServiceImpl implements CartItemService{
     @Transactional
     @Override
     public ApiResponse<?> addCartItem(CartItemRequest request) {
+       
         Carts carts=cartRepository.findByUserCartsIdAndDeletedFalse(request.getUserId())
                     .orElseThrow(()-> new AppException("Không thể truy cập",403));
 
@@ -74,14 +78,19 @@ public class CartItemServiceImpl implements CartItemService{
                         items.setQuantity(request.getQuantity());
                         return cartItemRepository.save(items);
                     });
-
+        CartDTO cartDTO=productConverter.setCartDTO(carts);
+        ProductDTO productDTO=productConverter.setProductDtO(products);
+        List<ProductDTO> productDTOs=new ArrayList<>();
+        productDTOs.add(productDTO);
         CartItemDTO dto=productConverter.setCartItemDTO(cartItem);
-
+        dto.setCartDTO(cartDTO);
+        dto.setCartProductDTO(productDTOs);
         return ApiResponse.<CartItemDTO>builder()
                     .status(201)
                     .message("Đã thêm thành công")
                     .data(dto)
                     .build();
+            
     }
     
     @Transactional
