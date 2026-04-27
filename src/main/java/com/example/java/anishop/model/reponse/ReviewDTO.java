@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 public class ReviewDTO {
     private Long reviewId;
+    private Long anilistId;
     private UserDTO reviewUserDTO;
     private AnimeDTO reviewAnimeDTO;
     private String context;

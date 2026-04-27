@@ -38,7 +38,8 @@ public class SecurityConfig {
             csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(Request -> Request
                 .requestMatchers("/login","/register").permitAll()
-                .requestMatchers(HttpMethod.GET,"/api/shops/**","/api/products/**","/api/animes/**").permitAll()
+                .requestMatchers(HttpMethod.GET,"/api/shops/**","/api/products/**","/api/animes/**","/api/reviews/**").permitAll()
+                .requestMatchers("/api/reviews/**").authenticated()
                 .requestMatchers(HttpMethod.POST,"/api/admin/**").hasAuthority(ADMIN_CREATE.name())
                 .requestMatchers(HttpMethod.DELETE,"/api/admin/**").hasAuthority(ADMIN_DELETE.name())
                 .requestMatchers(HttpMethod.PUT,"/api/admin/**").hasAuthority(ADMIN_UPDATE.name())

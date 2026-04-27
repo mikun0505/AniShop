@@ -10,6 +10,7 @@ import com.example.java.anishop.model.reponse.CartItemDTO;
 import com.example.java.anishop.model.reponse.OrderDTO;
 import com.example.java.anishop.model.reponse.OrderDetailDTO;
 import com.example.java.anishop.model.reponse.ProductDTO;
+import com.example.java.anishop.model.reponse.ReviewDTO;
 import com.example.java.anishop.model.reponse.ShopDTO;
 import com.example.java.anishop.model.reponse.UserDTO;
 import com.example.java.anishop.repository.entity.Caregories;
@@ -18,6 +19,7 @@ import com.example.java.anishop.repository.entity.Carts;
 import com.example.java.anishop.repository.entity.OrderDetails;
 import com.example.java.anishop.repository.entity.Orders;
 import com.example.java.anishop.repository.entity.Products;
+import com.example.java.anishop.repository.entity.Reviews;
 import com.example.java.anishop.repository.entity.Shops;
 import com.example.java.anishop.repository.entity.Users;
 
@@ -71,5 +73,9 @@ public class MapperConverter {
         return dto;
     }
    
+    public ReviewDTO setReviewDTO(Reviews review){
+        ReviewDTO dto=model.map(review, ReviewDTO.class);
+        return dto;
+    }
  }
 
