@@ -21,6 +21,8 @@ import com.example.java.anishop.repository.entity.Users;
 import com.example.java.anishop.service.ReviewService;
 import com.example.java.anishop.util.SecurityUtils;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class ReviewServiceImpl implements ReviewService{
 
@@ -52,6 +54,7 @@ public class ReviewServiceImpl implements ReviewService{
                 .build();
     }
 
+    @Transactional
     @Override
     public ApiResponse<?> addReview(ReviewRequest request) {
         String email=securityUtils.getCurrentUserEmail();
@@ -69,6 +72,7 @@ public class ReviewServiceImpl implements ReviewService{
         reviews.setCreatedAt(LocalDateTime.now());
         reviews.setRating(request.getRating());
         reviews.setReviewAnime(anime);
+        reviews.setReviewUser(user);
         reviewRepository.save(reviews);
 
         ReviewDTO dto=mapper.setReviewDTO(reviews);

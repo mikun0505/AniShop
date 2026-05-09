@@ -1,6 +1,7 @@
 package com.example.java.anishop.controller.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +14,14 @@ import com.example.java.anishop.service.UserService;
 
 import jakarta.validation.Valid;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import jakarta.validation.constraints.Min;
+
+
 
 
 @RestController
@@ -21,6 +30,7 @@ public class UserAPI {
     @Autowired
     private UserService userService;
     
+    @CacheEvict(value="user",allEntries=true)
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<?>> postMethodName(
         @Valid @RequestBody RegisterRequest request) {
@@ -33,5 +43,18 @@ public class UserAPI {
 
         return ResponseEntity.ok(userService.login(request));
 
+    }
+
+    @GetMapping("/api/users/{userId}")
+    public ResponseEntity<ApiResponse<?>> getUser(@PathVariable @Min(1) Long userId) {
+        return ResponseEntity.ok(userService.searchId(userId));
+    }
+    
+
+    
+    @DeleteMapping("/api/users/{userId}")
+    @CacheEvict(value="user",allEntries=true)
+    public ResponseEntity<ApiResponse<?>> deleteUser(@PathVariable @Min(1) Long userId){
+        return ResponseEntity.ok(userService.deleteById(userId));
     }
 }

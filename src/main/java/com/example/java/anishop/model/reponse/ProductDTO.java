@@ -1,5 +1,6 @@
 package com.example.java.anishop.model.reponse;
 
+import java.io.Serializable;
 import java.util.List;
 
 import lombok.Getter;
@@ -7,7 +8,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductDTO {
+public class ProductDTO implements  Serializable{
+    private static final Long CacheProductId=1L;
     private Long productId;
     private String productName;
     private Long categoryId;

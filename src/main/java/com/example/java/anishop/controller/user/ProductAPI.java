@@ -3,6 +3,7 @@ package com.example.java.anishop.controller.user;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,6 +46,7 @@ public class ProductAPI {
     
     // thêm sản phẩm
     @PostMapping("/api/products")
+    @CacheEvict(value="allProduct",allEntries=true)
     public ResponseEntity<ApiResponse<?>> createdProduct(@Valid @RequestBody ProductRequest request) {
         //TODO: process POST request
         return ResponseEntity.ok(productService.createdProduct(request));
@@ -53,7 +55,9 @@ public class ProductAPI {
 
     // sửa sản phẩm
 
+    
     @PutMapping("/api/products")
+    @CacheEvict(value="allProduct",allEntries=true)
     public ResponseEntity<ApiResponse<?>> updatedProduct(@Valid @RequestBody ProductRequest request) {
         //TODO: process POST request
         
@@ -62,6 +66,7 @@ public class ProductAPI {
 
     //xóa sản phẩm  Delete kh hỗ trợ RequestBody
     @DeleteMapping("/api/products/{productId}")
+    @CacheEvict(value="allProduct",allEntries=true)
     public ResponseEntity<ApiResponse<?>> deleteProduct(@RequestParam @Min(1) Long shopId,
                                                         @PathVariable @Min(1) Long productId){
         return ResponseEntity.ok(productService.deletedProduct(shopId, productId));

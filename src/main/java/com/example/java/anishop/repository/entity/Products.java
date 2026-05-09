@@ -1,6 +1,7 @@
 package com.example.java.anishop.repository.entity;
 
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,8 +26,8 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name="products")
-public class Products {  // Sản phẩm
-    
+public class Products implements Serializable{  // Sản phẩm
+    private static final Long CacheProductId=1L;
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long productId;

@@ -1,5 +1,6 @@
 package com.example.java.anishop.repository.entity;
  
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -34,8 +35,8 @@ import lombok.Setter;
 @AllArgsConstructor 
 @Entity
 @Table(name="users")
-public class Users{
-
+public class Users implements Serializable{
+    private static final long cacheUserId=1L;
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;

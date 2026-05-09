@@ -108,7 +108,7 @@ public class CartItemServiceImpl implements CartItemService{
         }else{
             cartItems.setQuantity(request.getQuantity());
         }
-
+        cartItemRepository.save(cartItems);
         CartItemDTO dto=productConverter.setCartItemDTO(cartItems);
         return ApiResponse.<CartItemDTO>builder()
                     .status(200)

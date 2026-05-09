@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.example.java.anishop.builder.ProductSearchBuilder;
@@ -29,6 +30,7 @@ import com.example.java.anishop.service.ShopService;
 import com.example.java.anishop.util.SecurityUtils;
 
 
+
 @Service
 public class ProductServiceImpl implements ProductService{
 
@@ -48,6 +50,8 @@ public class ProductServiceImpl implements ProductService{
     private ProductRepository productRepository;
     @Autowired
     private SecurityUtils securityUtils;
+
+    @Cacheable("allProduct")
     @Override
     public ApiResponse<?> findById(Long id) {
         try{
@@ -74,42 +78,50 @@ public class ProductServiceImpl implements ProductService{
        
 
     }
-
+    
+    @Cacheable("allProduct")
     @Override
     public ApiResponse<?> findAllProducts(Map<String, Object> params) {
-        ProductSearchBuilder product=productSearchBuilderConveter.productSearchBuilder(params);
-        List<Products> prodList=productRepository.findAllProducts(product);
-        List<ProductDTO> productDTOs=new ArrayList<>();
-        if(prodList!=null){
-            for(Products it:prodList){
-                ProductDTO productDTO=productConverter.setProductDtO(it);
-                productDTO.setCategoryName(it.getCaregori().getCaregoryName());
-                productDTO.setCategoryId(it.getCaregori().getCaregoryId());
-                List<OrderDetailDTO> productOrderDetails=it.getOrderDetailProduct().stream()  // chuyển set -> list
-                .map(od ->{
-                    OrderDetailDTO dto=new OrderDetailDTO();    // đẩy DTO vào để set vào ProductDTO do nó nhận OrderDetailsDTO
-                    dto.setOrderDetailId(od.getOrderDetailId());
-                    dto.setQuantity(od.getQuantity());
-                    dto.setPrice(od.getPrice());
+        try{
+            ProductSearchBuilder product=productSearchBuilderConveter.productSearchBuilder(params);
+            List<Products> prodList=productRepository.findAllProducts(product);
+            List<ProductDTO> productDTOs=new ArrayList<>();
+            if(prodList!=null){
+                for(Products it:prodList){
+                    ProductDTO productDTO=productConverter.setProductDtO(it);
+                    productDTO.setCategoryName(it.getCaregori().getCaregoryName());
+                    productDTO.setCategoryId(it.getCaregori().getCaregoryId());
+                    List<OrderDetailDTO> productOrderDetails=it.getOrderDetailProduct().stream()  // chuyển set -> list
+                    .map(od ->{
+                        OrderDetailDTO dto=new OrderDetailDTO();    // đẩy DTO vào để set vào ProductDTO do nó nhận OrderDetailsDTO
+                        dto.setOrderDetailId(od.getOrderDetailId());
+                        dto.setQuantity(od.getQuantity());
+                        dto.setPrice(od.getPrice());
 
-                    return dto;
+                        return dto;
 
-                }).collect(Collectors.toList());  // trả về List
-                productDTO.setProductOrderDetail(productOrderDetails);  // set vào
-                List<String> img=it.getProduct().stream()
-                .map(ProductImages::getImageUrl)
-                .collect(Collectors.toList());
-                productDTO.setImgUrl(img);
-                productDTOs.add(productDTO);
-                
+                    }).collect(Collectors.toList());  // trả về List
+                    productDTO.setProductOrderDetail(productOrderDetails);  // set vào
+                    List<String> img=it.getProduct().stream()
+                    .map(ProductImages::getImageUrl)
+                    .collect(Collectors.toList());
+                    productDTO.setImgUrl(img);
+                    productDTOs.add(productDTO);
+                    
 
+                }
             }
-        }
+        
+        System.out.println("Queryinng DB ..");
         return ApiResponse.<List<ProductDTO>>builder()
                     .status(200)
                     .message("Đã tìm thấy")
                     .data(productDTOs)
                     .build();
+     }catch(Exception e){
+                    e.printStackTrace(); // ← THÊM DÒNG NÀY
+                    throw e;
+        }
     }
 
     @Override

@@ -41,7 +41,8 @@ public class JwtFilter extends OncePerRequestFilter{
                 try{
                     userName=jwtService.extractUserName(token);
                 }catch(Exception e){
-                    e.printStackTrace();
+                    filterChain.doFilter(request, response);
+                    return;
                 }
             }
 

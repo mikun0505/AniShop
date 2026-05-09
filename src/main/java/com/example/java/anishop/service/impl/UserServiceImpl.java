@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -57,9 +58,10 @@ public class UserServiceImpl implements UserService {
         return user;
 
     }
-
+    
+    @Cacheable("user")
     @Override
-    public UserDTO searchId(Long id) {
+    public ApiResponse<?> searchId(Long id) {
         Users searchId=userRepository.findById(id)
                 .orElseThrow(()-> new AppException("Không tìm thấy Users", 404));
         UserDTO result=new UserDTO();
@@ -68,7 +70,11 @@ public class UserServiceImpl implements UserService {
         result.setFullName(searchId.getFullName());
         result.setIsActive(searchId.getIsActive());
 
-        return result;
+        return ApiResponse.<UserDTO>builder()
+                    .status(200)
+                    .message("Đã tìm thấy")
+                    .data(result)
+                    .build();
     }
     
     
@@ -142,6 +148,7 @@ public class UserServiceImpl implements UserService {
         
                 user.setDeleted(true);
                 user.setIsActive(false);
+                userRepository.save(user);
         return ApiResponse.<String>builder()
                 .status(200)
                 .message("Đã xóa thành công !")
