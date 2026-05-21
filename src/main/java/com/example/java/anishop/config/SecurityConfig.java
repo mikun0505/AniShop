@@ -46,6 +46,13 @@ public class SecurityConfig {
                 .requestMatchers("/login","/register").permitAll()
                 .requestMatchers(HttpMethod.GET,"/api/shops/**","/api/products/**","/api/animes/**","/api/reviews/**").permitAll()
                 .requestMatchers("/api/reviews/**").authenticated()
+                .requestMatchers(
+                    "/swagger-ui/**",
+                    "/swagger-ui.html",
+                    "/api-docs/**",
+                    "/api-docs",
+                    "/v3/api-docs/**"
+                ).permitAll()
                 .requestMatchers(HttpMethod.POST,"/api/admin/**").hasAuthority(ADMIN_CREATE.name())
                 .requestMatchers(HttpMethod.DELETE,"/api/admin/**").hasAuthority(ADMIN_DELETE.name())
                 .requestMatchers(HttpMethod.PUT,"/api/admin/**").hasAuthority(ADMIN_UPDATE.name())
