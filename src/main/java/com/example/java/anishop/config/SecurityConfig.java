@@ -53,6 +53,7 @@ public class SecurityConfig {
                     "/api-docs",
                     "/v3/api-docs/**"
                 ).permitAll()
+                .requestMatchers("/api/v1/stream/**").permitAll()
                 .requestMatchers(HttpMethod.POST,"/api/admin/**").hasAuthority(ADMIN_CREATE.name())
                 .requestMatchers(HttpMethod.DELETE,"/api/admin/**").hasAuthority(ADMIN_DELETE.name())
                 .requestMatchers(HttpMethod.PUT,"/api/admin/**").hasAuthority(ADMIN_UPDATE.name())
@@ -64,18 +65,32 @@ public class SecurityConfig {
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+    // @Bean
+    // public CorsConfigurationSource corsConfigurationSource(){
+    //     CorsConfiguration config=new CorsConfiguration();
+    //     config.setAllowedOrigins(List.of("*"));
+    //     config.setAllowedMethods(List.of("GET","POST","DELETE","OPTIONS"));
+    //     config.setAllowedHeaders(List.of("*"));
+    //     UrlBasedCorsConfigurationSource source=new UrlBasedCorsConfigurationSource();
+    //     source.registerCorsConfiguration("/**", config);
+    //     return source;
+        
+    // }
+
+
     @Bean
-    public CorsConfigurationSource corsConfigurationSource(){
-        CorsConfiguration config=new CorsConfiguration();
-        config.setAllowedOrigins(List.of("*"));
-        config.setAllowedMethods(List.of("GET","POST","DELETE","OPTIONS"));
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        // Fix: dùng origin cụ thể thay vì "*" để Bearer token hoạt động đúng
+        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        // Fix: thêm PUT để ProductAPI.updatedProduct() hoạt động
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
-        UrlBasedCorsConfigurationSource source=new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
-        
     }
-
+    
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider provider=new DaoAuthenticationProvider(userDetails);

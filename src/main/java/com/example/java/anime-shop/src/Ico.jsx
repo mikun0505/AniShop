@@ -1,8 +1,9 @@
-export default function Ico({ d, size = 20 }) {
+export default function Ico({ d, size = 20, color = "currentColor", strokeWidth = 1.8 }) {
+  const paths = Array.isArray(d) ? d : [d];
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      {[].concat(d).map((p, i) => <path key={i} d={p} />)}
+      stroke={color} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round">
+      {paths.map((p, i) => <path key={i} d={p} />)}
     </svg>
   );
 }

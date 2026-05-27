@@ -1,62 +1,46 @@
-import Ico from "../components/Ico";
-import { IC } from "../constants";
-
 export default function OrdersPage({ orders, user, onLogin }) {
   if (!user) return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "100px 20px", textAlign: "center" }}>
-      <div style={{ width: 90, height: 90, borderRadius: "50%", background: "linear-gradient(135deg,#7c3aed33,#ec489933)", border: "2px solid #7c3aed44", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 36, marginBottom: 22 }}>🔐</div>
-      <h2 style={{ fontFamily: "var(--fd)", fontSize: 26, letterSpacing: 1, marginBottom: 10 }}>YÊU CẦU ĐĂNG NHẬP</h2>
-      <p style={{ color: "var(--mut)", fontSize: 14, lineHeight: 1.7, marginBottom: 28, maxWidth: 320 }}>Bạn cần đăng nhập để xem đơn hàng.</p>
-      <button className="btn-p" style={{ maxWidth: 220 }} onClick={onLogin}>
-        <Ico d={IC.login} size={16} /> Đăng nhập ngay
-      </button>
+    <div style={{ display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"100px 20px",textAlign:"center" }}>
+      <div style={{ fontSize:64,marginBottom:16,opacity:.4 }}>🔐</div>
+      <h2 style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:28,marginBottom:10,color:"#e8e8f0" }}>YÊU CẦU ĐĂNG NHẬP</h2>
+      <button onClick={onLogin} style={{ background:"#e63946",border:"none",borderRadius:10,color:"#fff",padding:"12px 32px",fontSize:14,fontWeight:700,cursor:"pointer",marginTop:16 }}>Đăng nhập ngay</button>
     </div>
   );
-
-  if (orders.length === 0) return (
-    <div className="empty">
-      <span className="em">📦</span>
-      <h3>Chưa có đơn hàng</h3>
-      <p>Đặt hàng để xem lịch sử tại đây!</p>
+  if (!orders.length) return (
+    <div style={{ textAlign:"center",padding:"80px 20px",color:"#8888aa" }}>
+      <div style={{ fontSize:64,marginBottom:16,opacity:.4 }}>📦</div>
+      <h3 style={{ color:"#e8e8f0",marginBottom:8 }}>Chưa có đơn hàng</h3>
     </div>
   );
-
   return (
-    <>
-      <div className="sh" style={{ marginBottom: 20 }}>
-        <div className="st">LỊCH SỬ <em>ĐƠN HÀNG</em></div>
-        <span style={{ fontSize: 13, color: "var(--mut)" }}>{orders.length} đơn</span>
-      </div>
-      {orders.map((o) => (
-        <div key={o.orderId} className="oc">
-          <div className="oh">
+    <div style={{ padding:"32px 48px" }}>
+      <div style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:28,letterSpacing:1,marginBottom:24,color:"#e8e8f0" }}>LỊCH SỬ <span style={{ color:"#e63946" }}>ĐƠN HÀNG</span></div>
+      {orders.map(o=>(
+        <div key={o.orderId} style={{ background:"#12121a",border:"1px solid #2a2a3e",borderRadius:14,padding:22,marginBottom:14 }}>
+          <div style={{ display:"flex",justifyContent:"space-between",alignItems:"start",marginBottom:14 }}>
             <div>
-              <div className="oid">#{String(o.orderId).slice(-6)}</div>
-              <div style={{ fontSize: 12, color: "var(--mut)", marginTop: 3 }}>{new Date(o.createdAt).toLocaleString("vi-VN")}</div>
-              <div style={{ fontSize: 12, color: "var(--mut)", marginTop: 2 }}>📍 {o.address}</div>
+              <div style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:20,color:"#e63946" }}>#{String(o.orderId).slice(-6)}</div>
+              <div style={{ fontSize:12,color:"#8888aa",marginTop:2 }}>{new Date(o.createdAt).toLocaleString("vi-VN")}</div>
+              <div style={{ fontSize:12,color:"#8888aa",marginTop:2 }}>📍 {o.address}</div>
             </div>
-            <div className="ob" style={{
-              background: o.status ? "#10b98122" : "#f59e0b22",
-              color: o.status ? "#34d399" : "#fbbf24",
-              border: `1px solid ${o.status ? "#10b98144" : "#f59e0b44"}`,
-            }}>
-              {o.status ? "✅ Đã xác nhận" : "⏳ Chờ xác nhận"}
-            </div>
+            <span style={{ padding:"5px 13px",borderRadius:99,fontSize:11,fontWeight:700,background:o.status?"#10b98122":"#f59e0b22",color:o.status?"#34d399":"#fbbf24",border:`1px solid ${o.status?"#10b98144":"#f59e0b44"}` }}>
+              {o.status?"✅ Đã xác nhận":"⏳ Chờ xác nhận"}
+            </span>
           </div>
-          <div style={{ borderTop: "1px solid var(--brd)", paddingTop: 14 }}>
-            {o.orderDetail?.map((d, i) => (
-              <div key={i} className="ol">
+          <div style={{ borderTop:"1px solid #2a2a3e",paddingTop:14 }}>
+            {o.orderDetail?.map((d,i)=>(
+              <div key={i} style={{ display:"flex",justifyContent:"space-between",fontSize:13,color:"#8888aa",marginBottom:4 }}>
                 <span>{d.productName} × {d.quantity}</span>
-                <span style={{ color: "var(--txt)" }}>{(d.price * d.quantity).toLocaleString("vi-VN")}₫</span>
+                <span style={{ color:"#e8e8f0" }}>{(d.price*d.quantity).toLocaleString("vi-VN")}đ</span>
               </div>
             ))}
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12, borderTop: "1px solid var(--brd)", paddingTop: 12 }}>
-              <span style={{ fontSize: 14, color: "var(--mut)" }}>Tổng cộng</span>
-              <span style={{ fontFamily: "var(--fd)", fontSize: 20, color: "#fbbf24" }}>{o.totalPrice.toLocaleString("vi-VN")}₫</span>
+            <div style={{ display:"flex",justifyContent:"space-between",marginTop:12,paddingTop:12,borderTop:"1px solid #2a2a3e" }}>
+              <span style={{ color:"#8888aa",fontSize:14 }}>Tổng cộng</span>
+              <span style={{ fontFamily:"'Bebas Neue',sans-serif",fontSize:20,color:"#ffd60a" }}>{o.totalPrice.toLocaleString("vi-VN")}đ</span>
             </div>
           </div>
         </div>
       ))}
-    </>
+    </div>
   );
 }

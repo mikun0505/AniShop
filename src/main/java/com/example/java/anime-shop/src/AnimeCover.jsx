@@ -1,5 +1,5 @@
 import Ico from "./Ico";
-import { IC, ANIME_COLORS, ANIME_EMOJI } from "../constants";
+import { IC, ANIME_COLORS, ANIME_EMOJI } from "../index.js";
 
 export default function AnimeCover({ anime, size = "full", onClick }) {
   const idx   = anime.animeId % ANIME_COLORS.length;
@@ -37,7 +37,7 @@ export default function AnimeCover({ anime, size = "full", onClick }) {
       </div>
       <div className="ov" style={{
         position: "absolute", inset: 0, background: "rgba(0,0,0,.5)",
-        display: "flex", alignItems: "center", justifyContent: "center",
+        display: "flex", alignItems: "center", justifyContent: "cenqter",
         opacity: 0, transition: "opacity .2s",
       }}>
         <div style={{

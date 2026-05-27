@@ -1,4 +1,4 @@
-import { API_BASE } from "../constants";
+import { API_BASE } from "./index.js";
 
 export const api = {
   get: (path, token) =>

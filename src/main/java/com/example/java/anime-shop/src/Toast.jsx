@@ -1,21 +1,26 @@
-import Ico from "./Ico";
-import { IC } from "../constants";
-
+import { useEffect, useState } from "react";
+export function useToast() {
+  const [toasts, setToasts] = useState([]);
+  const toast = (msg, type = "ok") => {
+    const id = Date.now();
+    setToasts(p => [...p, { id, msg, type }]);
+    setTimeout(() => setToasts(p => p.filter(t => t.id !== id)), 3000);
+  };
+  return { toasts, toast };
+}
 export default function Toast({ toasts }) {
   return (
-    <div style={{ position: "fixed", bottom: 24, right: 24, zIndex: 9999, display: "flex", flexDirection: "column", gap: 8 }}>
-      {toasts.map((t) => (
+    <div style={{ position:"fixed", bottom:24, right:24, zIndex:999, display:"flex", flexDirection:"column", gap:8 }}>
+      {toasts.map(t => (
         <div key={t.id} style={{
-          background: t.type === "error"
-            ? "linear-gradient(135deg,#ef4444,#dc2626)"
-            : "linear-gradient(135deg,#10b981,#059669)",
-          color: "#fff", padding: "11px 18px", borderRadius: 12, fontSize: 13,
-          boxShadow: "0 8px 32px #0009", animation: "toastIn .3s ease",
-          display: "flex", alignItems: "center", gap: 8, maxWidth: 320, fontFamily: "var(--fb)",
-        }}>
-          <Ico d={t.type === "error" ? IC.close : IC.check} size={15} /> {t.msg}
-        </div>
+          background:"#12121a", border:`1px solid #2a2a3e`,
+          borderLeft: `3px solid ${t.type==="error"?"#e63946":"#e63946"}`,
+          padding:"12px 18px", borderRadius:8, fontSize:14, color:"#e8e8f0",
+          boxShadow:"0 8px 32px rgba(0,0,0,.5)", animation:"slideIn .25s ease",
+          minWidth:240,
+        }}>{t.msg}</div>
       ))}
+      <style>{`@keyframes slideIn{from{transform:translateX(60px);opacity:0}to{transform:none;opacity:1}}`}</style>
     </div>
   );
 }
